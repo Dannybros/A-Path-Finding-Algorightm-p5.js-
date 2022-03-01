@@ -8,6 +8,8 @@ var closeSet = [];
 var start, end;
 var path=[];
 
+var noSolution = false;
+
 function Spot(i, j){
     this.x = i;
     this.y = j;
@@ -19,8 +21,18 @@ function Spot(i, j){
     this.neighbors= [];
     this.previous = null;
 
+    this.wall = false;
+
+    if(random(1) <0.3){
+        this.wall = true;
+    }
+
     this.show = function(col){
         fill(col);
+        if(this.wall){
+            fill(0);
+        }
+
         noStroke();
         rect(this.x*w, this.y*h, w-1, h-1);
     }
@@ -89,7 +101,10 @@ function setup(){
     }
 
     start = grid[0][0];
-    end = grid[cols-1][rows-1];
+    end = grid[24][24];
+
+    start.wall = false;
+    end.wall = false;
 
     openSet.push(start);
 
@@ -102,6 +117,7 @@ function draw(){
     background(0);
 
     if(openSet.length >0){
+
         // we can keep going
         var lowest = 0;
 
@@ -125,7 +141,7 @@ function draw(){
         for(var i = 0; i<neighbors.length; i++){
             var neighbor = neighbors[i];
 
-            if(!closeSet.includes(neighbor)){
+            if(!closeSet.includes(neighbor) && !neighbor.wall){
                 var tempG = current.g + 1;
 
                 if(openSet.includes(neighbor)){
@@ -144,7 +160,11 @@ function draw(){
         }
 
     }else{
+
         // no solution
+        console.log("No Solution");
+        noSolution = true;
+        noLoop();
     }
 
     for(var i =0; i<cols; i++){
@@ -153,24 +173,26 @@ function draw(){
         }
     }
     
-    for(var i =0; i<openSet.length; i++){
-        openSet[i].show(color(0, 255, 0));
-    }
+    // for(var i =0; i<openSet.length; i++){
+    //     openSet[i].show(color(0, 255, 0));
+    // }
 
-    for(var i =0; i<closeSet.length; i++){
-        closeSet[i].show(color(0, 0, 255));
-    }
+    // for(var i =0; i<closeSet.length; i++){
+    //     closeSet[i].show(color(0, 0, 255));
+    // }
 
-    path =[];
-
-    var temp = current;
-    path.push(temp);
-    while(temp.previous){
-        path.push(temp.previous);
-        temp = temp.previous;
+    if(!noSolution){
+        path =[];
+    
+        var temp = current;
+        path.push(temp);
+        while(temp.previous){
+            path.push(temp.previous);
+            temp = temp.previous;
+        }
     }
 
     for(var i =0; i<path.length; i++){
-        path[i].show(color(0));
+        path[i].show(color(255, 0, 0));
     }
 }
