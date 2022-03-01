@@ -8,7 +8,6 @@ var closeSet = [];
 var start, end;
 var path=[];
 
-var noSolution = false;
 
 function Spot(i, j){
     this.x = i;
@@ -59,6 +58,26 @@ function Spot(i, j){
         // neighbor top
         if(j>0){
             this.neighbors.push(grid[i][j-1])
+        }
+
+        //neighbor right-top
+        if(i>0 && j>0){
+            this.neighbors.push(grid[i-1][j-1])
+        }
+
+        //neighbor left-top
+        if(i<cols-1 && j>0){
+            this.neighbors.push(grid[i+1][j-1])
+        }
+
+        //neighbor right-bottom
+        if(i>0 && j<rows-1){
+            this.neighbors.push(grid[i-1][j+1])
+        }
+
+        //neighbor left-bottom
+        if(i<cols-1 && j<rows-1){
+            this.neighbors.push(grid[i+1][j+1])
         }
     }
 }
@@ -114,7 +133,6 @@ function setup(){
 
 
 function draw(){
-    background(0);
 
     if(openSet.length >0){
 
@@ -143,29 +161,36 @@ function draw(){
 
             if(!closeSet.includes(neighbor) && !neighbor.wall){
                 var tempG = current.g + 1;
+                var newPath = false;
 
                 if(openSet.includes(neighbor)){
                     if(tempG < neighbor.g){
                         neighbor.g = tempG;
+                        newPath = true;
                     }
                 }else{
                     neighbor.g = tempG;
+                    newPath = true;
                     openSet.push(neighbor);
                 }
 
-                neighbor.h = heuristic(neighbor, end);
-                neighbor.f = neighbor.g + neighbor.h;
-                neighbor.previous = current;
+                if(newPath){
+                    neighbor.h = heuristic(neighbor, end);
+                    neighbor.f = neighbor.g + neighbor.h;
+                    neighbor.previous = current;
+                }
             }
         }
 
     }else{
-
         // no solution
         console.log("No Solution");
-        noSolution = true;
         noLoop();
+        return;
     }
+
+    
+    background(0);
 
     for(var i =0; i<cols; i++){
         for(var j =0; j<rows; j++){
@@ -181,18 +206,17 @@ function draw(){
     //     closeSet[i].show(color(0, 0, 255));
     // }
 
-    if(!noSolution){
-        path =[];
-    
-        var temp = current;
-        path.push(temp);
-        while(temp.previous){
-            path.push(temp.previous);
-            temp = temp.previous;
-        }
+    path =[];
+
+    var temp = current;
+    path.push(temp);
+    while(temp.previous){
+        path.push(temp.previous);
+        temp = temp.previous;
     }
 
     for(var i =0; i<path.length; i++){
-        path[i].show(color(255, 0, 0));
+        path[i].show(color(0, 255, 0));
     }
+    
 }
