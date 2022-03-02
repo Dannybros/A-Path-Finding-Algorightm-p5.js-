@@ -19,10 +19,9 @@ function Spot(i, j){
 
     this.neighbors= [];
     this.previous = null;
-
     this.wall = false;
 
-    if(random(1) <0.3){
+    if(random(1) <0.5){
         this.wall = true;
     }
 
@@ -91,8 +90,8 @@ function removeFromArray(array, element){
 }
 
 function heuristic(a, b){
-    // var d = dist(a.i, a.j, b.i, b.j);
-    var d= abs(a.i - b.i) + abs(a.j - b.j);
+    var d = dist(a.i, a.j, b.i, b.j);
+    // var d= abs(a.i - b.i) + abs(a.j - b.j);
     return d;
 }
 
@@ -198,13 +197,13 @@ function draw(){
         }
     }
     
-    // for(var i =0; i<openSet.length; i++){
-    //     openSet[i].show(color(0, 255, 0));
-    // }
+    for(var i =0; i<openSet.length; i++){
+        openSet[i].show(color(0, 255, 0));
+    }
 
-    // for(var i =0; i<closeSet.length; i++){
-    //     closeSet[i].show(color(0, 0, 255));
-    // }
+    for(var i =0; i<closeSet.length; i++){
+        closeSet[i].show(color(0, 0, 255));
+    }
 
     path =[];
 
