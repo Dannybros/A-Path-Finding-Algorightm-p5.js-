@@ -1,14 +1,3 @@
-var cols = 25;
-var rows = 25;
-var w, h;
-var grid = new Array(cols);
-
-var openSet = [];
-var closeSet = [];
-var start, end;
-var path=[];
-
-
 function Spot(i, j){
     this.x = i;
     this.y = j;
@@ -18,10 +7,11 @@ function Spot(i, j){
     this.h = 0;
 
     this.neighbors= [];
-    this.previous = null;
+    this.previous = undefined;
+
     this.wall = false;
 
-    if(random(1) <0.5){
+    if(random(1) <0.3){
         this.wall = true;
     }
 
@@ -90,10 +80,20 @@ function removeFromArray(array, element){
 }
 
 function heuristic(a, b){
-    var d = dist(a.i, a.j, b.i, b.j);
+    var d = dist(a.x, a.y, b.x, b.y);
     // var d= abs(a.i - b.i) + abs(a.j - b.j);
     return d;
 }
+
+var cols = 25;
+var rows = 25;
+var w, h;
+var grid = new Array(cols);
+
+var openSet = [];
+var closeSet = [];
+var start, end;
+var path=[];
 
 function setup(){
     createCanvas(400, 400);
@@ -197,13 +197,13 @@ function draw(){
         }
     }
     
-    for(var i =0; i<openSet.length; i++){
-        openSet[i].show(color(0, 255, 0));
-    }
+    // for(var i =0; i<openSet.length; i++){
+    //     openSet[i].show(color(0, 255, 0));
+    // }
 
-    for(var i =0; i<closeSet.length; i++){
-        closeSet[i].show(color(0, 0, 255));
-    }
+    // for(var i =0; i<closeSet.length; i++){
+    //     closeSet[i].show(color(0, 0, 255));
+    // }
 
     path =[];
 
